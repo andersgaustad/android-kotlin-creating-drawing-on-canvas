@@ -1,10 +1,7 @@
 package com.example.android.minipaint.canvas
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -19,6 +16,8 @@ private var path = Path()
 class MyCanvasView(context: Context) : View(context) {
     private lateinit var extraCanvas: Canvas
     private lateinit var extraBitmap: Bitmap
+
+    private lateinit var frame: Rect
 
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
@@ -61,11 +60,20 @@ class MyCanvasView(context: Context) : View(context) {
         extraCanvas = Canvas(extraBitmap).apply {
             drawColor(backgroundColor)
         }
+
+        // Create rectangle
+        val inset = 40
+        frame = Rect(inset, inset, width - inset, height - inset)
+
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawBitmap(extraBitmap, 0f, 0f, null)
+        canvas?.apply {
+            drawBitmap(extraBitmap, 0f, 0f, null)
+            drawRect(frame, paint)
+        }
+
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
